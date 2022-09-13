@@ -5,8 +5,8 @@ var allowedMistakes = 4;
 var gameON = true;
 var badGuesses = [ ];
 var goodGuesses = "";
-var result = "";
-// var spacesForUser= " "
+var result = [ ];
+var totalGuesses = [ ];
 console.log(wordArray)
 
 for (var i = 0; i < Word.toString().length; i++){ // loop which gives me underscore's according to the length of the word
@@ -15,18 +15,19 @@ for (var i = 0; i < Word.toString().length; i++){ // loop which gives me undersc
 
 while ( gameON ){  // first loop which starts the game 
     var userInput = prompt("Please enter a Character");
-    if (wordArray.toString().length == result.toString().length){
+    if (wordArray.toString().length <= result.toString().length){
+        totalGuesses = badGuesses.toString().length + badGuesses.toString().length
+        console.log("Good job man, you have finished the game and it only took you: " + totalGuesses)
         break;  // stops the entire game
     }
     if ( wordArray.includes(userInput) ) {
         for ( j = 0; j <= wordArray.toString().length; j ++){
             var index = wordArray.indexOf(userInput)
-            console.log(index)
             if (index == j){
-                result[j] += wordArray[index]
+                result[index] = userInput
+                console.log(result)
             }
         }        
-        console.log(result)
     } else {
         badGuesses += userInput;
         console.log(badGuesses)
