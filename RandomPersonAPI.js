@@ -1,71 +1,114 @@
 function printMenu () {
     console.log(
     "Hello welcome the RandmPersonAPI" + '\n' + 
-    "Chosse the number of action you'd like to do:" + '\n' + 
-    "1)To display a table" + '\n' + 
-    "2)To add a row" + '\n' + 
-    "3)To delete a row" + '\n' + 
-    "4)To clear a table")
+    "Choose the number of action you'd like to do:" + '\n' +
+    "1)Display a table" + '\n' +
+    "2)Add a row" + '\n' +
+    "3)Delete a row" + '\n' +
+    "4)Clear a table" + '\n' +
+    "5)Filter human" + '\n' +
+    "6)End game")
 }
 
-function requestInfo(request){
-    request = new XMLHttpRequest();
+function requestInfo(){
+    var request = new XMLHttpRequest();
     request.open("GET", "https://randomuser.me/api/", false);
     request.send();
-    loads = JSON.parse(request.response)
-    filterData = loads['results'][0]
-    id = filterData['id']['name'] + filterData['id']['value']
-    human = {"id":id, "name": filterData['name']['first'], "phone": filterData['phone'], "email": filterData['email'] }
-    return human;
+    var loads = JSON.parse(request.response)
+    var data = loads.results[0]
+    var id = data.id['name'] + data.id['value']
+    human = {"id":id, "name": data['name']['first'], "phone": data['phone'], "email": data['email'] }
+    return human
 }
 
-var clearThemAll = {
+var clearTable = {
     0 : { id: "", name: "", phone: "", email: ""}
 };
 
 var humansList = []
-var randomPersonAPIgame = false;
-var maxiumMenuOptions = 4
+var randomPersonIsActive = true;
+var maxiumMenuOptions = 6
+var fullAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
-requestInfo()
-humansList.push(human)
 printMenu()
-while(!randomPersonAPIgame){
-    var nullCheck = human.id
-    var userInput = prompt("Press the wished upon number")
-    if (userInput == ""){
-        console.log("Cant enter a character.. must be a number, try again")
-        randomPersonAPIgame = true
+while(randomPersonIsActive){
+    var userInput = prompt("Enter number")
+    // Validation that no string was entered
+    for (i=0; i<fullAlphabet.length; i++ ){
+        if (userInput == fullAlphabet[i]){
+            console.log("Cant enter a character.. must be a number, try again")
+        }
     }
-    if (humansList[0].id == "null" || humansList[0].id == ""){
-        console.log("The id is invalid")
-        randomPersonAPIgame = true
-    }
-    //Validation the input is in the acceptable interger numbers.
+    //Validation the input is in the acceptable integer numbers.
     if(userInput > maxiumMenuOptions || userInput == 0 ) {
-        randomPersonAPIgame = true
+        console.log("The number that was eneterd " + userInput + " is invalid " )
     } else {
-        if (1 == userInput) {
+        if (userInput == 1) {
             console.log("You choose (1)")
             console.table(humansList)
-        } else if (2 == userInput) {
+        } else if (userInput == 2) {
             console.log("You choose (2)")
             requestInfo()
-            nullCheck = human.id
-            if (nullCheck == 'null' || nullCheck == ""){
-                console.log("The id is invalid")
+            var nullCheck = human.id
+            if (nullCheck == "null"){
+                console.log("The id is " + nullCheck + " it is " + typeof(nullCheck) + " type and it is invalid")
             } else {
                 humansList.push(human)
-            console.table(humansList)
+                console.table(humansList)
             }
-        } else if (3 == userInput){
+        } else if (userInput == 3){
             console.log("You choose (3)")
-            humansList.splice(-1)
+            var userInput = prompt("Enter by which subject you'd like to delete")
+            if (userInput == 'id'){
+                var userInput = prompt("Enter the id to delete")
+                var index = humansList.findIndex(Object => { return Object.id === userInput ; });
+                console.log(index)
+                humansList.splice(index, 1)
+            } else if ( userInput == 'name') {
+                var userInput = prompt("Enter the name to delete")
+                var index = humansList.findIndex(Object => { return Object.name === userInput ; });
+                console.log(index)
+                humansList.splice(index, 1)
+            }else if ( userInput == 'phone') {
+                var userInput = prompt("Enter the phone number to delete")
+                var index = humansList.findIndex(Object => { return Object.phone === userInput ; });
+                console.log(index)
+                humansList.splice(index, 1)
+            }else if ( userInput == 'email'){
+                var userInput = prompt("Enter the email to delete")
+                var index = humansList.findIndex(Object => { return Object.email === userInput ; });
+                console.log(index)
+                humansList.splice(index, 1)
+            }
             console.table(humansList)
-        } else if (4 == userInput) {
+        } else if (userInput == 4) {
             console.log("You choose (4)")
-            humansList = clearThemAll
+            humansList = clearTable
             console.table(humansList)
+        } else if (userInput == 5) {
+            console.log("You choose (5)")
+            var userInput = prompt("Enter by which subject you'd like to filter")
+            if (userInput == 'id'){
+                var userInput = prompt("Enter the id to show its row")
+                var index = humansList.findIndex(Object => { return Object.id === userInput ; });
+                console.table(humansList[index])
+            } else if ( userInput == 'name') {
+                var userInput = prompt("Enter the name to show its row")
+                var index = humansList.findIndex(Object => { return Object.name === userInput ; });
+                console.table(humansList[index])
+            }else if ( userInput == 'phone') {
+                var userInput = prompt("Enter the phone number to show its row")
+                var index = humansList.findIndex(Object => { return Object.phone === userInput ; });
+                console.table(humansList[index])
+            }else if ( userInput == 'email'){
+                var userInput = prompt("Enter the email to show its row")
+                var index = humansList.findIndex(Object => { return Object.email === userInput ; });
+                console.table(humansList[index])
+            }
+        // Add another filter that will filter and print only humans based on filter
+        } else if (userInput == 6){
+            console.log("You choose (6), Ending game...")
+            randomPersonIsActive = false
         }
     }
 }
