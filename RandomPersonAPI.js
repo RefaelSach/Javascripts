@@ -13,45 +13,31 @@ function requestInfo(request){
     request.open("GET", "https://randomuser.me/api/", false);
     request.send();
     loads = JSON.parse(request.response)
-    return loads;
+    filterData = loads['results'][0]
+    id = filterData['id']['name'] + filterData['id']['value']
+    human = {"id":id, "name": filterData['name']['first'], "phone": filterData['phone'], "email": filterData['email'] }
+    return human;
 }
 
+var clearThemAll = {
+    0 : { id: "", name: "", phone: "", email: ""}
+};
+
+var humansList = []
 var randomPersonAPIgame = false;
 var maxiumMenuOptions = 4
-var frontendTable = ['id', 'name', 'phone', 'email']
 
 requestInfo()
-var filterData = loads['results'][0]
-var personDetails = []
-while(personDetails.length <= 3){
-    for ( var i = 0; i <= 3; i++ ) {
-        if (frontendTable[i] == 'id'){
-            personDetails.push(" " + filterData['id']['name']);
-            //personDetails += " " + filterData['id']['name'];
-        } else if (frontendTable[i] == 'name'){
-            personDetails.push(" " + filterData['name']['first']);
-           //personDetails += " " + filterData['name']['first'];
-        } else if (frontendTable[i] == 'phone'){
-            personDetails.push(" " + filterData['phone']);
-            //personDetails += " " + filterData['phone'];
-        } else if (frontendTable[i] == 'email'){
-            personDetails.push(" " + filterData['email']);
-            //personDetails += " " + filterData['email'];
-        }
-    }
-}
-var backendTable = frontendTable.concat(personDetails)
-frontendTable += '\n' + personDetails
-console.log(frontendTable)
+humansList.push(human)
 printMenu()
 while(!randomPersonAPIgame){
-    var table2 = ['id', 'name', 'phone', 'email']
+    var nullCheck = human.id
     var userInput = prompt("Press the wished upon number")
     if (userInput == ""){
         console.log("Cant enter a character.. must be a number, try again")
         randomPersonAPIgame = true
     }
-    if (personDetails[0] == null || personDetails[0] == ""){
+    if (humansList[0].id == "null" || humansList[0].id == ""){
         console.log("The id is invalid")
         randomPersonAPIgame = true
     }
@@ -60,30 +46,26 @@ while(!randomPersonAPIgame){
         randomPersonAPIgame = true
     } else {
         if (1 == userInput) {
-            console.log(frontendTable)
+            console.log("You choose (1)")
+            console.table(humansList)
         } else if (2 == userInput) {
+            console.log("You choose (2)")
             requestInfo()
-            filterData = loads['results'][0]
-            var personDetails = []
-            for ( var i = 0; i <= 3; i++ ) {
-                if (table2[i] == 'id'){
-                    personDetails += " " + filterData['id']['name'];
-                } else if (table2[i] == 'name'){
-                    personDetails += " " + filterData['name']['first'];
-                } else if (table2[i] == 'phone'){
-                    personDetails += " " + filterData['phone'];
-                } else if (table2[i] == 'email'){
-                    personDetails += " " + filterData['email'];
-                }
+            nullCheck = human.id
+            if (nullCheck == 'null' || nullCheck == ""){
+                console.log("The id is invalid")
+            } else {
+                humansList.push(human)
+            console.table(humansList)
             }
-            frontendTable += '\n' + personDetails
-            console.log(frontendTable)
         } else if (3 == userInput){
-            frontendTable.pop()
-            console.log(frontendTable)
-            console.log(frontendTable.length)
+            console.log("You choose (3)")
+            humansList.splice(-1)
+            console.table(humansList)
         } else if (4 == userInput) {
-
+            console.log("You choose (4)")
+            humansList = clearThemAll
+            console.table(humansList)
         }
     }
 }
