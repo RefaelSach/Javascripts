@@ -21,7 +21,7 @@ function gameMode() {
     }
     quantityOfMines = Math.floor(((tableColumn * tableRow) / 7))
     landMines = []
-    for (i = 0; i < quantityOfMines; i++) {
+    for (var i = 0; i < quantityOfMines; i++) {
         landMines.push("X");
     }
 }
@@ -40,7 +40,7 @@ function initializeBoard() {
                 board[i][j] = emptyCell
             }
         }
-        console.log(board[i].toString().replace(/,/g, ' ') + "   " + i + " Row ")
+        // console.log(board[i].toString().replace(/,/g, ' ') + "   " + i + " Row ")
     }
 
     return board
@@ -74,8 +74,8 @@ function firstMove() {
 
 function landMinesAssign() {
     // Validate no landmines near first move.
-    for (w = (chooseRow[0] - 1); w <= chooseRow[0]; w++) {
-        for (m = (chooseColumn[0] - 1); m <= chooseColumn[0]; m++) {
+    for (var w = (chooseRow[0] - 1); w <= chooseRow[0]; w++) {
+        for (var m = (chooseColumn[0] - 1); m <= chooseColumn[0]; m++) {
             if (backEndBoard[w][m] == emptyCell) {
                 backEndBoard[w][m] = firstMoveGuard
             } else if (backEndBoard[w][m] == borderCell) {
@@ -87,7 +87,7 @@ function landMinesAssign() {
     frontEndBoard == backEndBoard
     // Inserting randomly landmines to the game
     indexOfX = new Array();
-    for (i = 1; i <= quantityOfMines; i++) {
+    for (var i = 1; i <= quantityOfMines; i++) {
         var randomRow = Math.floor(Math.random() * backEndBoard.length);
         var randomColumn = Math.floor(Math.random() * backEndBoard[randomRow].length);
         // Validate no landmines near first move.
@@ -159,24 +159,25 @@ function otherMoves() {
 
 function printBoard() {
     // Prints the id Index of each column
-    array = [];
-    for (var i = 0; i < tableColumn; i++) {
+    array = [""];
+    for (var i = 1; i < tableColumn - 1; i++) {
         array.push(i);
     }
     console.log(array.toString().replace(/,/g, ' ') + " Column")
     // Prints seperately each row of the table
-    for (var i = 0; i < tableRow; i++) {
-        for (var j = 0; j < tableColumn; j++) {
-
+    for (var i = 1; i < tableRow - 1; i++) {
+        for (var j = 1; j < tableColumn - 1; j++) {
         }
-        console.log(frontEndBoard[i].toString().replace(/,/g, ' ') + "   " + i + " Row ")
+        console.log(frontEndBoard[i].slice(1, - 1).toString().replace(/,/g, ' ') + "  :" + i + " <-Row ")
     }
 }
+
 //Game starts here
 gameMode()
 var backEndBoard = initializeBoard()
 console.clear()
 var frontEndBoard = initializeBoard()
+printBoard()
 firstMove()
 landMinesAssign()
 printBoard()
