@@ -7,17 +7,17 @@ function gameMode() {
         "4)Expert")
     var gameMode = prompt("Choose mode.")
     if (gameMode == "Beginner") {
-        tableColumn = 5
-        tableRow = 5
+        tableColumn = 7
+        tableRow = 7
     } else if (gameMode == "Normal") {
-        tableColumn = 10
-        tableRow = 10
+        tableColumn = 12
+        tableRow = 12
     } else if (gameMode == "Hard") {
-        tableColumn = 15
-        tableRow = 15
+        tableColumn = 17
+        tableRow = 17
     } else if (gameMode == "Expert") {
-        tableColumn = 20
-        tableRow = 20
+        tableColumn = 22
+        tableRow = 22
     }
     quantityOfMines = Math.floor(((tableColumn * tableRow) / 7))
     landMines = []
@@ -29,7 +29,7 @@ function gameMode() {
 function initializeBoard() {
     var board = new Array();
     emptyCell = "_"
-    var borderCell = '%'
+    borderCell = '%'
     for (var i = 0; i < tableColumn; i++) {
         board[i] = new Array();
         for (var j = 0; j < tableRow; j++) {
@@ -56,17 +56,32 @@ function firstMove() {
         mineSweepGameisON = false
 
     }
+    backEndBoard[chooseRow][chooseColumn] = 0
 }
 
 function landMinesAssign() {
-    backEndBoard[chooseRow][chooseColumn] = 0
+    firstMoveGuard = 0
+    // Validate no landmines near first move.
+    console.log("Thatsaaa the symbol" + backEndBoard[chooseRow][chooseColumn] + "Thats the row:" + chooseRow + "Thats the column" + chooseColumn)
+    for (w = (chooseRow[0] - 1); w <= chooseRow[0]; w++) {
+        for (m = (chooseColumn[0] - 1); m <= chooseColumn[0]; m++) {
+            console.log("Thats the symbol: " + backEndBoard[w][m] + "Thats the row:" + w + "Thats the column" + m)
+            if (backEndBoard[w][m] == emptyCell) {
+                backEndBoard[w][m] = firstMoveGuard
+                console.log(backEndBoard[w][m])
+            } else if  (backEndBoard[w][m] == borderCell) {
+                backEndBoard[w][m] = borderCell
+            }
+
+        }
+    }
     // Inserting randomly landmines to the game
-    maxLandMinesNearCell = 8;
     indexOfX = new Array();
-    for (i = 0; i < landMines.length; i++) {
+    for (i = 1; i <= quantityOfMines; i++) {
         var randomRow = Math.floor(Math.random() * backEndBoard.length);
         var randomColumn = Math.floor(Math.random() * backEndBoard[randomRow].length);
-        if (backEndBoard[randomRow][randomColumn] == '\D') {
+        // Validate no landmines near first move.
+        if (backEndBoard[randomRow][randomColumn] == borderCell || backEndBoard[randomRow][randomColumn] == firstMoveGuard) {
         } else if (backEndBoard[randomRow][randomColumn] == emptyCell) {
             backEndBoard[randomRow][randomColumn] = landMines[i];
             indexOfX.push(randomRow)
@@ -88,6 +103,7 @@ function calCellNearLandMines() {
 //Game starts here
 gameMode()
 var backEndBoard = initializeBoard()
+var frontEndBoard = initializeBoard()
 var mineSweepGameisON = true
 while (mineSweepGameisON) {
     console.table(backEndBoard)
@@ -103,7 +119,9 @@ while (mineSweepGameisON) {
                     backEndBoard[j][l] = "X";
                 } else if (backEndBoard[j][l] == "%") {
                     backEndBoard[j][l] = "%";
-                } else if (backEndBoard[j][l] == emptyCell) {
+                } else if (backEndBoard[j][l] == firstMoveGuard) {
+                    backEndBoard[j][l] = 1
+                } else if (backEndBoard[j][l] == emptyCell || backEndBoard[j][l] == firstMoveGuard ){
                     backEndBoard[j][l] = 1
                 } else if (backEndBoard[j][l] == 1) {
                     backEndBoard[j][l] += 1;
@@ -116,5 +134,6 @@ while (mineSweepGameisON) {
 
         }
     }
+    console.table(frontEndBoard)
     otherMoves()
 }
