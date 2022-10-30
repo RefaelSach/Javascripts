@@ -6,16 +6,16 @@ function gameMode() {
         "3)Hard" + "\n" +
         "4)Expert")
     var gameMode = prompt("Choose mode.")
-    if (gameMode == "Beginner") {
+    if (gameMode == "Beginner" || gameMode == 1) {
         tableColumn = 7
         tableRow = 7
-    } else if (gameMode == "Normal") {
+    } else if (gameMode == "Normal" || gameMode == 2) {
         tableColumn = 12
         tableRow = 12
-    } else if (gameMode == "Hard") {
+    } else if (gameMode == "Hard" || gameMode == 3) {
         tableColumn = 17
         tableRow = 17
-    } else if (gameMode == "Expert") {
+    } else if (gameMode == "Expert" || gameMode == 4) {
         tableColumn = 22
         tableRow = 22
     }
@@ -49,12 +49,12 @@ function initializeBoard() {
 function firstMove() {
     chooseRow = prompt("Please start the game, you must enter: row number")
     if (chooseRow == "stop") {
-        mineSweepGameisON = false
+        //mineSweepGameisON = false
 
     }
     chooseColumn = prompt("Please start the game, you must enter: Column number")
     if (chooseColumn == "stop") {
-        mineSweepGameisON = false
+        //mineSweepGameisON = false
 
     }
     firstMoveGuard = 0
@@ -62,14 +62,6 @@ function firstMove() {
     console.log("You choose: " + '\n' +
         chooseRow + " Row " + '\n' +
         chooseColumn + " Column ")
-    // emptyCellCount = 0
-    // for (var p = 1; p < tableRow - 1; p++) {
-    //     for (var j = 1; j < tableColumn - 1; j++) {
-    //         if (frontEndBoard[p][j] == emptyCell) {
-    //             emptyCellCount += 1;
-    //         }
-    //     }
-    // }
 }
 
 function landMinesAssign() {
@@ -94,6 +86,7 @@ function landMinesAssign() {
         if (backEndBoard[randomRow][randomColumn] == borderCell || backEndBoard[randomRow][randomColumn] == firstMoveGuard) {
         } else if (backEndBoard[randomRow][randomColumn] == emptyCell) {
             backEndBoard[randomRow][randomColumn] = landMines[i];
+            // Array with the index of each Mine that was inserted to the game.
             indexOfX.push(randomRow)
             indexOfX.push(randomColumn)
         }
@@ -104,16 +97,12 @@ function landMinesAssign() {
         var tempXindex = new Array(indexOfX[i - 1], indexOfX[i])
         for (var j = (tempXindex[0] - 1); j <= (tempXindex[0] + 1); j++) {
             for (var l = (tempXindex[1] - 1); l <= (tempXindex[1] + 1); l++) {
-                if (backEndBoard[j][l] == "X") {
+                if (backEndBoard[j][l] == "X" || backEndBoard[j][l] == undefined) {
                     backEndBoard[j][l] = "X";
                 } else if (backEndBoard[j][l] == "%") {
                     backEndBoard[j][l] = "%";
-                } else if (backEndBoard[j][l] == firstMoveGuard) {
+                } else if (backEndBoard[j][l] == firstMoveGuard || backEndBoard[j][l] == emptyCell ) {
                     backEndBoard[j][l] = 1
-                } else if (backEndBoard[j][l] == emptyCell || backEndBoard[j][l] == firstMoveGuard) {
-                    backEndBoard[j][l] = 1
-                } else if (backEndBoard[j][l] == undefined) {
-                    backEndBoard[j][l] = "X"
                 } else if (backEndBoard[j][l] == 1) {
                     backEndBoard[j][l] += 1;
                 } else if (backEndBoard[j][l] == 2) {
@@ -147,8 +136,8 @@ function otherMoves() {
     if (chooseColumn == "stop") {
         mineSweepGameisON = false
     }
-    if (frontEndBoard[chooseRow][chooseColumn] == '\d'){
-    } else if ( frontEndBoard[chooseRow][chooseColumn] == emptyCell ){
+    if (frontEndBoard[chooseRow][chooseColumn] == '\d') {
+    } else if (frontEndBoard[chooseRow][chooseColumn] == emptyCell) {
         emptyCellCount = emptyCellCount - 1;
     }
     frontEndBoard[chooseRow][chooseColumn] = backEndBoard[chooseRow][chooseColumn]
